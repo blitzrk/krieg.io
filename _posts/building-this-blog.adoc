@@ -1,5 +1,0 @@
-= How I Built This Blog - Part 1
-Ben Krieger <blitzrk@gmail.com>
-v1.0.0, 2016-03-31: Comment
-
-In the first part of this series, I will discuss my 
