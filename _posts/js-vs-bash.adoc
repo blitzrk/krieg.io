@@ -1,4 +1,4 @@
-= Functions versus Unix
+= Javascript Versus Bash
 Ben Krieger <blitzrk@gmail.com>
 2016-04-19
 
