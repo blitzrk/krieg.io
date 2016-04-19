@@ -1,0 +1,150 @@
+= Functions versus Unix
+Ben Krieger <blitzrk@gmail.com>
+2016-04-19
+
+This week at work I was experimenting with different fuzzy searches to try to
+automate correlating two databases of software by title and version. So which
+tool did I pull out first: Python, Javascript, or Go? Well, given npm's large
+repository of search algorithms, common to obscure, Node seemed like the way
+to go. But in the end, it was actually plain old Bash that shone on this
+problem.
+
+== Expressions FTW!
+
+I am normally a very function-oriented programmer. Generally, if I have an idea
+in mind, either for a script or just a new piece of a bigger program, I like to
+make it work in Elm first. Now it might seem crazy at first to write something
+in an ML-style that's eventually going to turn into Python or worse, Java, but
+there are some very good reasons for doing so.
+
+First of all, the style naturally helps break algorithms into manageable chunks,
+because no one finds huge let-in expressions elegant. It's no surprise that
+Okasaki's "Purely Functional Data Structures" is in SML and not Lisp. (I'm sorry,
+Clojure fans, but I just don't find lisps to always be elegant programming!)
+
+Second, and most importantly, is immediate feedback and shareability.
+http://elm-lang.org/try[Try Elm] is a great tool for prototyping. Elm is famous
+for its helpful compiler messages and ease of writing to the DOM. As long as you
+don't need more than a side effect or two, it's a great jumping off point. Never
+do I write code that works as quickly as when I work in Elm.
+
+== Expressions FTL
+
+But this week I needed dependencies! Do you really expect me to write my own left-
+pad? (Kidding.) So Node was the obvious choice. First time around it looked like
+this. Not too bad, but it didn't quite do what I wanted. I also tried it with 
+Levenshtein distance, but eventually I decided I just needed a simpler custom
+search algorithm.
+
+[source,javascript]
+----
+#!/usr/bin/env node
+
+if(process.argv.length !== 3) {
+  console.log("Usage: search.js TERM")
+  process.exit();
+}
+
+var stdin = process.openStdin();
+var needle = process.argv[2];
+var haystack = "";
+stdin.on('data', function(chunk) { haystack += chunk });
+process.stdout.on('error', function(err) { if(err.code === 'EPIPE') process.exit() });
+
+stdin.on('end', function() {
+  var haystack = haystack.trim().split('\n')
+
+  var fuzzy = require('fuzzy');
+  fuzzy.filter(needle.trim(), haystack)
+    .filter(function(match) { return match.score > 20; })
+    .map(function(res) { console.log(res.string); });
+});
+----
+
+Next attempt. Now you're going to cringe when you see this code, but remember that
+
+[source,javascript]
+----
+#!/usr/bin/env node
+
+if(process.argv.length !== 3) {
+  console.log("Usage: search.js TERM")
+  process.exit();
+}
+
+var stdin = process.openStdin();
+var needle = process.argv[2];
+var haystack = "";
+stdin.on('data', function(chunk) { haystack += chunk });
+process.stdout.on('error', function(err) { if(err.code === 'EPIPE') process.exit() });
+
+stdin.on('end', function() {
+  haystack.trim()
+    .split('\n')
+    .map(function(hay) {
+      return {
+        string: hay,
+        score: needle.trim().split(/\s+/)
+          .map(function(part) { return new RegExp(part,'i').test(hay); })
+          .filter(function(val) { return !!val })
+          .length
+      };
+    })
+    .filter(function(obj) { return obj.score > 0 })
+    .sort(function(a, b) { return b.score - a.score })
+    .map(function(obj) { console.log(obj.string) })
+});
+----
+
+== Piping-hot Bash
+
+Obviously this was ridiculously ugly, but whatever, no one is going to look at
+my data processing code except maybe myself in a few years. Wait, crap, I'm
+still working for the government; who knows when Node's CoN will expire and no
+one will be able to run this. Heck, I'm still stuck with v0.10 and who knows
+how many other insecure versions of things because of bureaucracy. Thanks
+Army! I better port this to shell.
+
+I'll be honest, my first thought was: "How the heck do arrays work again in
+Bash? Oh G-d, I hope awk or sed can handle this for me." Well, it turned out
+that awk was the perfect tool for the job. Its split function isn't bad and
+all I needed to do was loop through and do some regex matching. Well, if you
+want an example of where procedural is a lot better than functional, here
+you go.
+
+[source,bash]
+----
+#!/bin/bash
+set -euo pipefail
+
+function match() {
+    term="$1"
+
+    awk '{
+    term="'"$term"'"
+    n=split(tolower(term), terms)
+    score=0; string=$0
+
+    for(i=1; i<=n; i++) {
+        if(tolower(string) ~ terms[i]) { score++ }
+    }
+
+    if(score > 0) { print score, string }
+    }'
+}
+
+function main() {
+    term="$1"; shift
+    filter="${@:+${@:?:} head $@}" # If extra args, use with head, else noop
+
+    match "$term" \
+        | sort -snrk 1,1 \
+        | cut -d ' ' -f 2- \
+        | $filter
+}
+
+main "$@"
+----
+
+Beautiful. Extendable. Pipeable with no extra work (like whatever that
+`stdout.on('error')` thing was). I should have just done this from the start.
