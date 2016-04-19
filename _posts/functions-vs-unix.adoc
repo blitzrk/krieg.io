@@ -61,7 +61,9 @@ stdin.on('end', function() {
 });
 ----
 
-Next attempt. Now you're going to cringe when you see this code, but remember that
+Next attempt. Now you're going to cringe when you see this code, but keep in
+mind its merits: I wrote this in 5 minutes and it immediately worked. That is
+always a magical thing.
 
 [source,javascript]
 ----
