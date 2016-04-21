@@ -5,7 +5,7 @@ Ben Krieger <blitzrk@gmail.com>
 Today there was a https://news.ycombinator.com/item?id=11430442[discussion on Hacker News]
 about using Vim as a commandline tool within Unix pipes. Of course this immediately
 appealed to me, because I've invested a lot of time becoming proficient in it and some
-days I just don't want to try to remember if and how sed and Vim's s command differ.
+days I just don't want to try to remember if and how sed and Vim's `s` command differ.
 But while I was initially looking for a bunch of new Vim tricks to add to my repertoire,
 instead the conversation diverged how Vim was derived from ed, how in many ways old
 tools like terminal text editors still have much to offer, and how this shouldn't surprise

@@ -1,6 +1,6 @@
 langauge: node_js
-node_js:
-- '5'
+before_install: nvm install v5
+install: npm install blitzrk/asciidoc-blog
 script: bash ./run/deploy.sh
 env:
   global:
@@ -8,7 +8,6 @@ env:
   - GH_EMAIL: blitzrk@gmail.com
   - GH_REF: github.com/blitzrk/blitzrk.github.io.git
   - GH_BRANCH: master
-  - secure: wRV3Ndy/KKcc4KFrPVu8EOYEndaIKhz6L8OQU+79C/jLHJHV79IEAjpAH7/Ml+odarYK3Gig89Ob/GDiclCbjwtx//bMIpCRwbpT+DkgmOOcIdAEHWcPLzjWkFSgP8unPqpHcQM7Ttb5Nexi84KkfFFyxu//gFTCyY7v94zOc9pqr4VsV+kz1ZMQNozfwc7D0n9g/TX9Xo8rB/VcnFv6dTxaR71/UO7WTD6lVexRvx36Ahtx9OgvxfGXkUpfXvpnXjCH+fYu/TFvvKH8dN3loH6BgJDZ/uZtHHi1IHTevo/Uc56GfqAOkJvKRPSfsd/BK5Fh6ukK1U92Bez8lhu27LFSzAJM4KwpdA+BzG+S5UKwyb4ZPaCefWw+uEBByXX4cUxLBa7Hm49dH/0PszWTRCf2FWZl3193G9SWL+7mFPksQzBplwC9Cuv+l7ohAN8Uplh+6T4oN6oQDyTdREako+EQLQ43/UAa5FgvFDMNTcII18DLTXm2oScnklZAjN9BV0CxgoPnjoEeilerj/dFZBMJCV8gsBgocLjY8mgqkBeH0rG42fsDJGqAvuR8o6aIryGEJ9K8xfaB1rpWwWrjK97UgBm95L1Bw3q6jclIhcISfYp2NUMqLq4PLsRIZkcPhl3B+Hr4NAnFiKpzNic1JQQdZqQ0Vyqo1DHwLhd6u+Y=
   - secure: McLRtecllqL7xwYbplO00ud2fFJoO5G30UxTOFvDQiKzG7TYbA0/BILShq4jSQG6FhFAVmPldHHvUM0GLcbuXwfprqkxlpRRmxbpL2R/l8S+axbifbet65Jjp6kcvKT0vbI70TLpybZXf8sMlCI81ZYkCsHoUuyyCpVQN67YuIYuJCGAlVAObkPM0g471jwyJCy7Me24FmXpkKYPQ83QYNhkuYcCyxombi0cq6KYFKgcVaFj5HYMuVlt433po3cj5L0ZUCN/PtON8Wo23kHDiBPl+sLyKfv2QnuqqfuuClLdkBj/DofcTidtZhppzSfijkShFweIZex5dKeZieXlFTBtY61ITTKzvy76+Ky62mYlPDGCF94iG7tU9adX8iWbA1hPMEeCZTESxyPpD7WRxvyWfoTdL+pOKfc5t94xODrJtg0+qlTlZm9b8zcECOVtsOxhvfStbNpYvAj+FpfWJ87soBlORhngnBNAr05iII66NJQTTGEhggl22wntKrrg8dttSZcmGcm+BropPHAZrr7Wg/qDopF/1TxhnHK6I8BbyoPPU3m6g25b/h9t2odrtG3/eYL6XRnFbYo72+8KjfkZVunhbpDId6RsFqfkWJ5+E9pQhKc9y7NHD+Lihs7doEYmSO94IlwZHwKNrnzW47uSwHrpy04CfiIPQUwq5g0=
 notifications:
   email: false
