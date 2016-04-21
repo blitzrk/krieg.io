@@ -1,3 +1,0 @@
-:toc: macro
-:toc-title: Posts
-toc::[]
